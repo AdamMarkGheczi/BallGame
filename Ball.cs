@@ -138,10 +138,5 @@ namespace Balls
             this.x += this.dx;
             this.y += this.dy;
         }
-
-        public override string ToString()
-        {
-            return $"{(int)type} {x} {y} {dx} {dy} {radius}";
-        }
     }
 }
