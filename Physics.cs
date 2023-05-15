@@ -4,11 +4,17 @@ namespace Balls
 {
     public static class Physics
     {
+        /// <summary>
+        /// Checks if two balls are currently colliding
+        /// </summary>
         public static bool DiscreteCollision(Ball A, Ball B)
         {
             return Math.Sqrt((A.x - B.x) * (A.x - B.x) + (A.y - B.y) * (A.y - B.y)) <= A.Radius + B.Radius;
         }
-
+        /// <summary>
+        /// Accounts for discrete motion by parametrizing the path of the two balls
+        /// </summary>
+        /// <returns>In how many time units will the balls collide if velocities remain unchanged</returns>
         public static double ContinuousCollision(Ball A, Ball B)
         {
             int a = (A.x + A.dx) - (B.x + B.dx);
@@ -21,7 +27,9 @@ namespace Balls
             int exp2 = 2*a*b + 2*c*d - 2*b*b - 2*d*d;
             int exp3 = b*b + d*d - R;
 
-            return MyMath.SolveQuadratic(exp1, exp2, exp3);
+            if (exp1 == 0 && exp2 == 0) return double.PositiveInfinity;
+
+            return MyMath.FirstRootOfQuadratic(exp1, exp2, exp3);
         }
 
         /// <summary>
@@ -40,11 +48,8 @@ namespace Balls
                 case 4:
                     return A.x - A.Radius <= wallPosition;
                 default:
-                    // so that all code path return a value and the compiler is happy
                     return false;
             }
-            
         }
-
     }
 }

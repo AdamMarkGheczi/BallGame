@@ -85,7 +85,7 @@
             this.random_Button.TabIndex = 3;
             this.random_Button.Text = "Generate Random";
             this.random_Button.UseVisualStyleBackColor = true;
-            this.random_Button.Click += new System.EventHandler(this.random_Button_Click);
+            this.random_Button.Click += new System.EventHandler(this.generate_Random_Button_Click);
             // 
             // step_Button
             // 
@@ -141,7 +141,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1407, 939);
+            this.ClientSize = new System.Drawing.Size(1423, 939);
             this.Controls.Add(this.clear_Button);
             this.Controls.Add(this.spawn_Monster_Button);
             this.Controls.Add(this.spawn_Repellent_Button);

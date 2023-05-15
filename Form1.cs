@@ -12,8 +12,8 @@ namespace Balls
             InitializeComponent();
         }
 
-        Engine engine;
-        Stopwatch framerateTester = new Stopwatch();
+        private Engine engine;
+        private Stopwatch framerateTester = new Stopwatch();
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -27,6 +27,7 @@ namespace Balls
 
             pictureBox1.BackColor = Color.White;
             engine = new Engine(pictureBox1);
+            Ball.SetBounds(0, 0, engine.ScreenWidth, engine.ScreenHeight);
         }
         
         private void toggle_Button_Click(object sender, EventArgs e)
@@ -43,17 +44,18 @@ namespace Balls
             framerateTester.Start();
 
             engine.ClearScreen();
-            engine.RenderObjects();
+            engine.RenderFrame();
             engine.RefreshScreen();
             engine.TickBalls();
             framerateTester.Stop();
-            double ms = (double)Math.Max(framerateTester.ElapsedMilliseconds, 1);
-            double fps = 1000 / (ms * timer1.Interval);
-            FPSTextBox.Text = "FPS:" + Environment.NewLine + fps.ToString("#.##");
+
+            double fps = CalculateFps(framerateTester.ElapsedMilliseconds, timer1.Interval);
             framerateTester.Reset();
+
+            FPSTextBox.Text = "FPS:" + Environment.NewLine + fps.ToString("#.##");
         }
 
-        private void random_Button_Click(object sender, EventArgs e)
+        private void generate_Random_Button_Click(object sender, EventArgs e)
         {
             engine.DeleteBalls();
 
@@ -64,24 +66,25 @@ namespace Balls
             engine.AddBall(Ball.Types.Monster);
 
             engine.ClearScreen();
-            engine.RenderObjects();
+            engine.RenderFrame();
             engine.RefreshScreen();
         }
 
         private void step_Button_Click(object sender, EventArgs e)
         {
-            FPSTextBox.Text = "FPS:" + Environment.NewLine + "-";
             timer1.Enabled = false;
+            toggle_Button.BackColor = Color.IndianRed;
+            FPSTextBox.Text = "FPS:" + Environment.NewLine + "-";
             engine.ClearScreen();
             engine.TickBalls();
-            engine.RenderObjects();
+            engine.RenderFrame();
             engine.RefreshScreen();
         }
 
-        bool spawnRegular = false;
-        bool spawnMonster = false;
-        bool spawnRepellent = false;
-        int spawnType = 0;
+        private bool spawnRegular = false;
+        private bool spawnMonster = false;
+        private bool spawnRepellent = false;
+        private int spawnType = 0;
         private void spawn_Regular_Button_Click(object sender, EventArgs e)
         {
             spawnRegular = !spawnRegular;
@@ -153,17 +156,17 @@ namespace Balls
             switch (spawnType)
             {
                 case 1:
-                    engine.AddBall(new Ball(Ball.Types.Regular, e.X, e.Y, 0, 0, engine.screen.Width, engine.screen.Height));
+                    engine.AddBall(Ball.Types.Regular, e.X, e.Y);
                     break;
                 case 2:
-                    engine.AddBall(new Ball(Ball.Types.Repellent, e.X, e.Y, 0, 0, engine.screen.Width, engine.screen.Height));
+                    engine.AddBall(Ball.Types.Repellent, e.X, e.Y);
                     break;
                 case 3:
-                    engine.AddBall(new Ball(Ball.Types.Monster, e.X, e.Y, 0, 0, engine.screen.Width, engine.screen.Height));
+                    engine.AddBall(Ball.Types.Monster, e.X, e.Y);
                     break;
             }
 
-            engine.RenderObjects();
+            engine.RenderFrame();
             engine.RefreshScreen();
         }
 
@@ -175,6 +178,14 @@ namespace Balls
             engine.DeleteBalls();
             engine.ClearScreen();
             engine.RefreshScreen();
+        }
+
+        public double CalculateFps(long ellapsedMilliseconds, int frameLength)
+        {
+            ellapsedMilliseconds = (long)Math.Max(ellapsedMilliseconds, 1);
+            double fps = 1000 / (double)(ellapsedMilliseconds * frameLength);
+
+            return fps;
         }
 
     }
